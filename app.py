@@ -62,7 +62,7 @@ def start():
 
 @app.route("/teacher")
 def teacher():
-    render_template("index.html")
+    return render_template("index.html")
 
 if __name__ == "__main__":
     app.run()
