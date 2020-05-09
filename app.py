@@ -58,11 +58,28 @@ def start():
     db.session.commit()
     '''data = to_arr(Post.query.all())
     data.__repr__()'''
-    return render_template("index.html")
+    return render_template("index.html", teacher="False")
 
-@app.route("/teacher")
-def teacher():
-    return render_template("index.html")
+@app.route("/teacher/<string:logged_in>")
+def teacher(logged_in):
+    if logged_in == "true":
+        return render_template("index.html", teacher="True")
+    else:
+        return render_template("blank.html")
+
+
+@app.route("/login_status", methods=['POST'])
+def login_status():
+    status = request.form['status']
+    if status == "true":
+        print("*** True!")
+        teacher("true")
+        return jsonify('output', str)
+    else:
+        print("*** False!")
+        teacher("false")
+        return jsonify('output', str)
+
 
 if __name__ == "__main__":
     app.run()
