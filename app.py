@@ -1,6 +1,7 @@
 import flask
 from flask import Flask, render_template, redirect
-from flask_login import LoginManager, login_required, login_user
+from flask_bootstrap import Bootstrap
+from flask_login import LoginManager, login_required, login_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.sql.functions import user
@@ -11,6 +12,7 @@ from wtforms.validators import DataRequired
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
+Bootstrap(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 SECRET_KEY = os.urandom(32)
@@ -105,30 +107,34 @@ def teacher():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Here we use a class of some kind to represent and validate our
-    # client-side form data. For example, WTForms is a library that will
-    # handle this for us, and we use a custom LoginForm to validate.
     form = LoginForm()
     if form.validate_on_submit():
-        # Login and validate the user.
-        # user should be an instance of your `User` class
-        login_user(user)
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if user.password == form.password.data:
+                login_user(user)
+                return redirect("/")
 
-        flask.flash('Logged in successfully.')
-        return redirect("/")
-    print("Failure?")
-    return render_template("index.html")
+        return '<h1>Invalid username or password</h1>'
+        #return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
+
+    return render_template('login.html', form=form)
 
 
 @app.route("/")
 def home_page():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/william/RaceCar.sqlite'
     db.create_all()
-    if user_loader("ginny.yeekee").is_authenticated():
-        return redirect("/teacher")
-    elif user_loader("student").is_authenticated():
-        return redirect("student")
+    user = current_user
+    if user:
+        if user.username == "ginny.yeekee":
+            print("Ginny logged in")
+            return redirect("/teacher")
+        elif user.username == "student":
+            print("student logged in")
+            return redirect("student")
     else:
+        print("No one logged in")
         return redirect("/login")
 
 if __name__ == "__main__":
