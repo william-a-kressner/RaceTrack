@@ -131,9 +131,10 @@ def login():
 def home_page():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/william/RaceCar.sqlite'
     db.create_all()
-    if not isinstance(current_user, LocalProxy):
-        return redirect("/student")
-    else:
+    try:
+        if current_user.username == "student" or current_user.username == "ginny.yeekee":
+            return redirect("/student")
+    except AttributeError:
         print("No one logged in")
         return redirect("/login")
 
