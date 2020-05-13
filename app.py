@@ -1,12 +1,13 @@
 import flask
 from flask import Flask, render_template, redirect
 from flask_bootstrap import Bootstrap
-from flask_login import LoginManager, login_required, login_user, current_user
+from flask_login import LoginManager, login_required, login_user, current_user, UserMixin, AnonymousUserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.sql.functions import user
 import os
 from flask_wtf import FlaskForm
+from werkzeug.local import LocalProxy
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 
@@ -23,7 +24,8 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Sign In')
 
-class User(db.Model):
+
+class User(UserMixin, db.Model):
     __tablename__ = 'user'
 
     username = db.Column(db.String, primary_key=True)
@@ -93,9 +95,9 @@ def start():
     else:
         print("Error.")
         exit(0)'''
-    test = RaceCar("Bob", 5)
-    db.session.add(test)
-    db.session.commit()
+    #test = RaceCar("Bob", 5)
+    #db.session.add(test)
+    #db.session.commit()
     '''data = to_arr(Post.query.all())
     data.__repr__()'''
     return render_template("index.html")
@@ -103,6 +105,9 @@ def start():
 @app.route("/teacher")
 @login_required
 def teacher():
+    if not current_user.username == "ginny.yeekee":
+        flask.flash("You are not authorized.")
+        return redirect("/student")
     return render_template("index.html")
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -113,10 +118,11 @@ def login():
         if user:
             if user.password == form.password.data:
                 login_user(user)
-                return redirect("/")
-
+                if current_user.username == "ginny.yeekee":
+                    return redirect("/teacher")
+                elif current_user.username == "student":
+                    return redirect("student")
         return '<h1>Invalid username or password</h1>'
-        #return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
 
     return render_template('login.html', form=form)
 
@@ -125,14 +131,8 @@ def login():
 def home_page():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/william/RaceCar.sqlite'
     db.create_all()
-    user = current_user
-    if user:
-        if user.username == "ginny.yeekee":
-            print("Ginny logged in")
-            return redirect("/teacher")
-        elif user.username == "student":
-            print("student logged in")
-            return redirect("student")
+    if not isinstance(current_user, LocalProxy):
+        return redirect("/student")
     else:
         print("No one logged in")
         return redirect("/login")
