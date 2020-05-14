@@ -74,11 +74,15 @@ class StudentInfo(db.Model):
         self.number_students = number_students
 
 #convert an object to an array
-def to_arr(arr):
-    data = []
-    for RaceCar in arr:
-        data.append((RaceCar.name, RaceCar.tasks_complete))
-    return data
+def to_arr(arr1, arr2):
+    data1 = []
+    for StudentInfo in arr1:
+        data1.append(StudentInfo.total_tasks)
+    print(data1)
+    data2 = []
+    for RaceCar in arr2:
+        data2.append((RaceCar.name, RaceCar.tasks_complete, data1[0]))
+    return data2
 
 @login_manager.user_loader
 def user_loader(user_id):
@@ -99,7 +103,7 @@ def start():
     #test = RaceCar("Bob", 5)
     #db.session.add(test)
     #db.session.commit()
-    data = to_arr(RaceCar.query.all())
+    data = to_arr(StudentInfo.query.all(), RaceCar.query.all())
     print(data)
     return render_template("index.html", dbData=data)
 
@@ -109,7 +113,7 @@ def teacher():
     if not current_user.username == "ginny.yeekee":
         flask.flash("You are not authorized.")
         return redirect("/student")
-    data = to_arr(RaceCar.query.all())
+    data = to_arr(StudentInfo.query.all(), RaceCar.query.all())
     print(data)
     return render_template("index.html", dbData=data)
 
@@ -138,7 +142,7 @@ def home_page():
         if current_user.username == "student" or current_user.username == "ginny.yeekee":
             return redirect("/student")
     except AttributeError:
-        print("No one logged in")
+        #print("No one logged in")
         return redirect("/login")
 
 
@@ -146,7 +150,6 @@ def home_page():
 @login_required
 def logout():
     logout_user()
-    print("hello")
     flask.flash("Logout successful.")
     return redirect("/")
 

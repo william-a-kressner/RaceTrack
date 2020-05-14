@@ -27,9 +27,14 @@
 </nav>
 
 <body>
-    <label>Name</label>
-    <img src="/static/racecar.png" style="width:96px;height:48px;">
-    <img src="/static/road.png">
+    {% for name, tasks_completed, total_tasks in dbData %}
+        <div>
+            <label>{{ name }}</label>
+            <label>{{ tasks_completed }}/{{ total_tasks}}</label>
+            <img src="/static/racecar.png" style="width:96px;height:48px;">
+            <img src="/static/road.png">
+        </div>
+    {% endfor %}
 </body>
 
 </html>
