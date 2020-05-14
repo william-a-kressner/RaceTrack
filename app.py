@@ -167,6 +167,15 @@ def new_student():
     flask.flash("Submission complete.")
     return render_template("index.html", dbData=data, teacher=True)
 
+@app.route("/delete", methods=['POST'])
+@login_required
+def delete():
+    id = request.form['id']
+    RaceCar.query.filter_by(name=id).delete()
+    db.session.commit()
+    data = to_arr(StudentInfo.query.all(), RaceCar.query.all())
+    flask.flash("Successfully deleted " + id + ". Please refresh.")
+    return render_template("index.html", dbData=data, teacher=True)
 
 if __name__ == "__main__":
     app.run()

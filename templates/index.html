@@ -34,6 +34,9 @@
             <label>{{ tasks_completed }}/{{ total_tasks}}</label>
             <img src="/static/racecar.png"style="width:96px;height:48px;">
             <img src="/static/road.png">
+            {% if teacher %}
+                <a class="btn btn-primary float-right" id="{{ name }}" style="font-size: 10px; color: black" onclick="deleteRacecar(this.id)">Delete</a>
+            {% endif %}
         </div>
     {% endfor %}
     {% if teacher %}

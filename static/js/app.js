@@ -21,3 +21,15 @@ function submitStudent() {
         url : '/process'
     })
 }
+
+function deleteRacecar(id){
+    $.ajax({
+        data : {
+            id : id
+        },
+        type : 'POST',
+        url : '/delete'
+    })
+}
+
+
