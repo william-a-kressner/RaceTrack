@@ -1,7 +1,8 @@
 import flask
 from flask import Flask, render_template, redirect
 from flask_bootstrap import Bootstrap
-from flask_login import LoginManager, login_required, login_user, current_user, UserMixin, AnonymousUserMixin
+from flask_login import LoginManager, login_required, login_user, current_user, UserMixin, AnonymousUserMixin, \
+    logout_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.sql.functions import user
@@ -73,11 +74,11 @@ class StudentInfo(db.Model):
         self.number_students = number_students
 
 #convert an object to an array
-'''def to_arr(arr):
+def to_arr(arr):
     data = []
-    for Post in arr:
-        data.append((Post.name, Post.tags, Post.post))
-    return data'''
+    for RaceCar in arr:
+        data.append((RaceCar.name, RaceCar.tasks_complete))
+    return data
 
 @login_manager.user_loader
 def user_loader(user_id):
@@ -98,9 +99,9 @@ def start():
     #test = RaceCar("Bob", 5)
     #db.session.add(test)
     #db.session.commit()
-    '''data = to_arr(Post.query.all())
-    data.__repr__()'''
-    return render_template("index.html")
+    data = to_arr(RaceCar.query.all())
+    print(data)
+    return render_template("index.html", dbData=data)
 
 @app.route("/teacher")
 @login_required
@@ -108,7 +109,9 @@ def teacher():
     if not current_user.username == "ginny.yeekee":
         flask.flash("You are not authorized.")
         return redirect("/student")
-    return render_template("index.html")
+    data = to_arr(RaceCar.query.all())
+    print(data)
+    return render_template("index.html", dbData=data)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -137,6 +140,15 @@ def home_page():
     except AttributeError:
         print("No one logged in")
         return redirect("/login")
+
+
+@app.route("/logout", methods=['POST'])
+@login_required
+def logout():
+    logout_user()
+    print("hello")
+    flask.flash("Logout successful.")
+    return redirect("/")
 
 if __name__ == "__main__":
     app.run()
