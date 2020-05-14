@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:position="http://www.w3.org/1999/xhtml">
+<meta http-equiv="pragma" content="no-cache"/>
 <header>
     <link rel="stylesheet" href="https://themeswitcher.csh.rit.edu/api/get" media="screen">
     <link rel="stylesheet" href="../../static/css/stylesheet.css">
@@ -31,10 +32,22 @@
         <div>
             <label>{{ name }}</label>
             <label>{{ tasks_completed }}/{{ total_tasks}}</label>
-            <img src="/static/racecar.png" style="width:96px;height:48px;">
+            <img src="/static/racecar.png"style="width:96px;height:48px;">
             <img src="/static/road.png">
         </div>
     {% endfor %}
+    {% if teacher %}
+        <div>
+            <form id="form" class="fixed-form collapse in">
+                Student name:<br>
+                <input style="border-radius: 10px" type="text" id="student_name"><br>
+                Tasks completed:<br>
+                <input style="border-radius: 12px" type="text" id="tasks_completed"><br>
+                <button type="submit" id="submit_button" onclick="submitStudent()" class="btn btn-primary btn-circle-small">submit</button>
+            </form>
+            <button class="btn-primary fixed-btn btn-lg" data-toggle="collapse" href="#form" role="button" aria-expanded="false" aria-controls="form" style="border-radius: 10px" id="showHide" style="color:#000000;">Add student</button>
+        </div>
+    {% endif %}
 </body>
 
 </html>

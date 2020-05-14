@@ -1,5 +1,5 @@
 import flask
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request, jsonify
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, login_required, login_user, current_user, UserMixin, AnonymousUserMixin, \
     logout_user
@@ -78,7 +78,6 @@ def to_arr(arr1, arr2):
     data1 = []
     for StudentInfo in arr1:
         data1.append(StudentInfo.total_tasks)
-    print(data1)
     data2 = []
     for RaceCar in arr2:
         data2.append((RaceCar.name, RaceCar.tasks_complete, data1[0]))
@@ -104,8 +103,11 @@ def start():
     #db.session.add(test)
     #db.session.commit()
     data = to_arr(StudentInfo.query.all(), RaceCar.query.all())
-    print(data)
-    return render_template("index.html", dbData=data)
+    #print(data)
+    if current_user.username == "ginny.yeekee":
+        return render_template("index.html", dbData=data, teacher=True)
+    return render_template("index.html", dbData=data, teacher=False)
+
 
 @app.route("/teacher")
 @login_required
@@ -114,8 +116,8 @@ def teacher():
         flask.flash("You are not authorized.")
         return redirect("/student")
     data = to_arr(StudentInfo.query.all(), RaceCar.query.all())
-    print(data)
-    return render_template("index.html", dbData=data)
+    #print(data)
+    return render_template("index.html", dbData=data, teacher=True)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -152,6 +154,19 @@ def logout():
     logout_user()
     flask.flash("Logout successful.")
     return redirect("/")
+
+@app.route("/process", methods=['POST'])
+@login_required
+def new_student():
+    name = request.form['student_name']
+    tasks_completed = request.form['tasks_completed']
+    student = RaceCar(name, tasks_completed)
+    db.session.add(student)
+    db.session.commit()
+    data = to_arr(StudentInfo.query.all(), RaceCar.query.all())
+    flask.flash("Submission complete.")
+    return render_template("index.html", dbData=data, teacher=True)
+
 
 if __name__ == "__main__":
     app.run()
