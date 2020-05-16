@@ -1,3 +1,8 @@
+.parent {
+    position: relative;
+    top: 0;
+    left: 0;
+}
 .image1 {
     position: relative;
     top: 0;
@@ -9,4 +14,18 @@
     top: 90px;
     left: 90px;
     border: 1px green solid;
+}
+
+.road {
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.car {
+    height: 64px;
+    width: 128px;
+    position: absolute;
+    left: 15px;
+    top: 22px;
 }

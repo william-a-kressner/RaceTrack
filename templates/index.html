@@ -29,16 +29,22 @@
 
 <body>
     {% for name, tasks_completed, total_tasks in dbData %}
-        <div>
-            <label>{{ name }}</label>
-            <label id="num_tasks_{{ name }}">{{ tasks_completed}}</label>
-            <label>/{{ total_tasks}}</label>
-            <img src="/static/racecar.png"style="width:96px;height:48px;">
-            <img src="/static/road.png">
+        <div class="row">
+            <div class="col-lg-1">
+                <label>{{ name }}</label>
+                <label id="num_tasks_{{ name }}">{{ tasks_completed}}</label>
+                <label>/{{ total_tasks}}</label>
+            </div>
+            <div class="col-lg-7">
+                <img src="/static/road.png" class="road">
+                <img src="/static/racecar.png" class="car">
+            </div>
             {% if teacher %}
-                <a class="btn btn-primary" id="{{ name }}_decrement" style="font-size: 10px; color: black" onclick="decrementRacecar(this.id)">-</a>
-                <a class="btn btn-primary" id="{{ name }}_increment" style="font-size: 10px; color: black" onclick="incrementRacecar(this.id)">+</a>
-                <a class="btn btn-primary" id="{{ name }}_delete" style="font-size: 10px; color: black" onclick="deleteRacecar(this.id)">Delete</a>
+                <div class="col-lg-4; btn-group-vertical">
+                    <a class="btn btn-primary" id="{{ name }}_decrement" style="font-size: 10px; color: black" onclick="decrementRacecar(this.id)">-</a>
+                    <a class="btn btn-primary" id="{{ name }}_increment" style="font-size: 10px; color: black" onclick="incrementRacecar(this.id)">+</a>
+                    <a class="btn btn-primary" id="{{ name }}_delete" style="font-size: 10px; color: black" onclick="deleteRacecar(this.id)">Delete</a>
+                </div>
             {% endif %}
         </div>
     {% endfor %}
@@ -51,7 +57,9 @@
                 <input style="border-radius: 12px" type="text" id="tasks_completed"><br>
                 <button type="submit" id="submit_button" onclick="submitStudent()" class="btn btn-primary btn-circle-small">submit</button>
             </form>
-            <a class="btn-primary fixed-btn btn-lg" data-toggle="collapse" href="#form" role="button" aria-expanded="false" aria-controls="form" style="border-radius: 10px" id="showHide" style="color:#000000;">Add student</a>
+            <div>
+                <a class="btn-primary fixed-btn btn-lg" data-toggle="collapse" href="#form" role="button" aria-expanded="false" aria-controls="form" style="border-radius: 10px" id="showHide" style="color:#000000;">Add student</a>
+            </div>
         </div>
     {% endif %}
 </body>
