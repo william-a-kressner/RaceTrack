@@ -189,7 +189,19 @@ def increment():
     student.tasks_complete += 1
     db.session.commit()
     data = to_arr(StudentInfo.query.all(), RaceCar.query.all())
-    print(data)
+    #print(data)
+    return render_template("index.html", dbData=data, teacher=True)
+
+@app.route("/decrement", methods=['POST'])
+@login_required
+def decrement():
+    id = request.form['id']
+    id = id[:-10]
+    student = RaceCar.query.filter_by(name=id).first()
+    student.tasks_complete -= 1
+    db.session.commit()
+    data = to_arr(StudentInfo.query.all(), RaceCar.query.all())
+    #print(data)
     return render_template("index.html", dbData=data, teacher=True)
     
 

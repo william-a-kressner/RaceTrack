@@ -47,3 +47,19 @@ function incrementRacecar(id) {
     //console.log(current.toString());
     document.getElementById("num_tasks_"+id).innerText = current.toString();
 }
+
+function decrementRacecar(id) {
+    $.ajax({
+        data : {
+            id : id
+        },
+        type : 'POST',
+        url : '/decrement'
+    });
+    id = id.substring(0, id.length-10);
+    console.log(id);
+    var current = parseInt(document.getElementById("num_tasks_"+id).innerText);
+    current--;
+    console.log(current.toString());
+    document.getElementById("num_tasks_"+id).innerText = current.toString();
+}

@@ -36,6 +36,7 @@
             <img src="/static/racecar.png"style="width:96px;height:48px;">
             <img src="/static/road.png">
             {% if teacher %}
+                <a class="btn btn-primary" id="{{ name }}_decrement" style="font-size: 10px; color: black" onclick="decrementRacecar(this.id)">-</a>
                 <a class="btn btn-primary" id="{{ name }}_increment" style="font-size: 10px; color: black" onclick="incrementRacecar(this.id)">+</a>
                 <a class="btn btn-primary" id="{{ name }}_delete" style="font-size: 10px; color: black" onclick="deleteRacecar(this.id)">Delete</a>
             {% endif %}
