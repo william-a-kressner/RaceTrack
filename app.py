@@ -171,11 +171,27 @@ def new_student():
 @login_required
 def delete():
     id = request.form['id']
+    id = id[:-7]
+    print(id)
     RaceCar.query.filter_by(name=id).delete()
     db.session.commit()
     data = to_arr(StudentInfo.query.all(), RaceCar.query.all())
     flask.flash("Successfully deleted " + id + ". Please refresh.")
     return render_template("index.html", dbData=data, teacher=True)
+
+
+@app.route("/increment", methods=['POST'])
+@login_required
+def increment():
+    id = request.form['id']
+    id = id[:-10]
+    student = RaceCar.query.filter_by(name=id).first()
+    student.tasks_complete += 1
+    db.session.commit()
+    data = to_arr(StudentInfo.query.all(), RaceCar.query.all())
+    print(data)
+    return render_template("index.html", dbData=data, teacher=True)
+    
 
 if __name__ == "__main__":
     app.run()

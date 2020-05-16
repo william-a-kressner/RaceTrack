@@ -23,7 +23,7 @@
         <a class="nav-link" style="color:#000000;" href="/teacher">Teacher</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" style="color:#000000;" id="logout-button">Logout</a>
+        <button class="nav-link btn btn-primary" style="color:#000000;" id="logout-button">Logout</button>
     </li>
 </nav>
 
@@ -31,11 +31,13 @@
     {% for name, tasks_completed, total_tasks in dbData %}
         <div>
             <label>{{ name }}</label>
-            <label>{{ tasks_completed }}/{{ total_tasks}}</label>
+            <label id="num_tasks_{{ name }}">{{ tasks_completed}}</label>
+            <label>/{{ total_tasks}}</label>
             <img src="/static/racecar.png"style="width:96px;height:48px;">
             <img src="/static/road.png">
             {% if teacher %}
-                <a class="btn btn-primary float-right" id="{{ name }}" style="font-size: 10px; color: black" onclick="deleteRacecar(this.id)">Delete</a>
+                <a class="btn btn-primary" id="{{ name }}_increment" style="font-size: 10px; color: black" onclick="incrementRacecar(this.id)">+</a>
+                <a class="btn btn-primary" id="{{ name }}_delete" style="font-size: 10px; color: black" onclick="deleteRacecar(this.id)">Delete</a>
             {% endif %}
         </div>
     {% endfor %}
@@ -48,7 +50,7 @@
                 <input style="border-radius: 12px" type="text" id="tasks_completed"><br>
                 <button type="submit" id="submit_button" onclick="submitStudent()" class="btn btn-primary btn-circle-small">submit</button>
             </form>
-            <button class="btn-primary fixed-btn btn-lg" data-toggle="collapse" href="#form" role="button" aria-expanded="false" aria-controls="form" style="border-radius: 10px" id="showHide" style="color:#000000;">Add student</button>
+            <a class="btn-primary fixed-btn btn-lg" data-toggle="collapse" href="#form" role="button" aria-expanded="false" aria-controls="form" style="border-radius: 10px" id="showHide" style="color:#000000;">Add student</a>
         </div>
     {% endif %}
 </body>
