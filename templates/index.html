@@ -37,14 +37,11 @@
             </div>
             <div class="col-lg-7">
                 <img src="/static/road.png" class="road">
-                <img src="/static/racecar.png" id="{{ name }}_racecar" class="car" style="left: 350px;">
+                <img src="/static/racecar1.png" id="{{ name }}_racecar" class="car" style="left: 350px;">
                 <script>
                     var num_complete = parseInt("{{ tasks_completed }}");
-                    console.log("Number complete reads: " + num_complete);
                     var total = parseInt("{{ total_tasks }}");
-                    console.log("Total number is: " + total);
                     var str = (350*num_complete/total).toString();
-                    console.log("After dividing and turing into string we get: " + str);
                     document.getElementById("{{ name }}_racecar").style.left = str + "px";
                 </script>
             </div>

@@ -18,7 +18,7 @@
 
 .road {
     position: relative;
-    max-width: 100%;
+    width: 750px;
     max-height: 100%;
 }
 
@@ -26,6 +26,5 @@
     height: 64px;
     width: 128px;
     position: absolute;
-
-    top: 22px;
+    top: 53px;
 }
