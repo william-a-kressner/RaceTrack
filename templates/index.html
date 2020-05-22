@@ -43,6 +43,24 @@
                     var total = parseInt("{{ total_tasks }}");
                     var str = (350*num_complete/total).toString();
                     document.getElementById("{{ name }}_racecar").style.left = str + "px";
+                    switch (Math.floor(Math.random() * 5) + 1) {
+                        case 1:
+                            document.getElementById("{{ name }}_racecar").src = "/static/racecar1.png";
+                            break;
+                        case 2:
+                            document.getElementById("{{ name }}_racecar").src = "/static/racecar2.png";
+                            break;
+                        case 3:
+                            document.getElementById("{{ name }}_racecar").src = "/static/racecar3.png";
+                            break;
+                        case 4:
+                            document.getElementById("{{ name }}_racecar").src = "/static/racecar4.png";
+                            break;
+                        default:
+                        case 5:
+                            document.getElementById("{{ name }}_racecar").src = "/static/racecar5.png";
+                            break;
+                    }
                 </script>
             </div>
             {% if teacher %}
