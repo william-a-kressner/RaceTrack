@@ -1,14 +1,12 @@
-import flask
-from flask import Flask, render_template, redirect, request, jsonify
-from flask_bootstrap import Bootstrap
-from flask_login import LoginManager, login_required, login_user, current_user, UserMixin, AnonymousUserMixin, \
-    logout_user
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.sql.functions import user
 import os
+
+import flask
+from flask import Flask, render_template, redirect, request
+from flask_bootstrap import Bootstrap
+from flask_login import LoginManager, login_required, login_user, current_user, UserMixin, logout_user
+from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from werkzeug.local import LocalProxy
+from sqlalchemy import Column, Integer, String
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 
@@ -203,7 +201,7 @@ def decrement():
     data = to_arr(StudentInfo.query.all(), RaceCar.query.all())
     #print(data)
     return render_template("index.html", dbData=data, teacher=True)
-    
+
 
 if __name__ == "__main__":
     app.run()
