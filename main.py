@@ -1,6 +1,7 @@
 import os
 
 import flask
+import sqlalchemy
 from flask import Flask, render_template, redirect, request
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, login_required, login_user, current_user, UserMixin, logout_user
@@ -17,6 +18,22 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
+
+
+db_test = sqlalchemy.create_engine(
+    # Equivalent URL:
+    # mysql+pymysql://<db_user>:<db_pass>@/<db_name>?unix_socket=/cloudsql/<cloud_sql_instance_name>
+    sqlalchemy.engine.url.URL(
+        drivername="mysql+pymysql",
+        username="root",
+        password="mysql-pass",
+        database="racetrack_mysql_db",
+        query={"unix_socket": "/cloudsql/{}".format("racetrack-278014:us-east1:racetrack-mysql-db")},
+    ),
+    # ... Specify additional properties here.
+    # ...
+)
+
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -97,9 +114,8 @@ def start():
     else:
         print("Error.")
         exit(0)'''
-    #test = RaceCar("Bob", 5)
-    #db.session.add(test)
-    #db.session.commit()
+
+
     data = to_arr(StudentInfo.query.all(), RaceCar.query.all())
     #print(data)
     if current_user.username == "ginny.yeekee":
@@ -119,6 +135,7 @@ def teacher():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+#TODO Use the new database to pull data.
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -131,12 +148,24 @@ def login():
                     return redirect("student")
         return '<h1>Invalid username or password</h1>'
 
-    return render_template('login.html', form=form)
+    #START TEST
+    test = []
+    with db_test.connect() as conn:
+        # Execute the query and fetch all results
+        test_data = conn.execute(
+            "SELECT * FROM user"
+        ).fetchall()
+        # Convert the results into a list of dicts representing votes
+        for row in test_data:
+            test.append({"username": row[0], "password": row[1]})
+    #END TEST
+
+    return render_template('login.html', form=form, test=test)
 
 
 @app.route("/")
 def home_page():
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/william/RaceCar.sqlite'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///RaceCar.sqlite'
     db.create_all()
     try:
         if current_user.username == "student" or current_user.username == "ginny.yeekee":
